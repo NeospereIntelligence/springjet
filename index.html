@@ -129,12 +129,33 @@
 </div>
 
 <script>
-  const data = {
-    Learn: ["Animals", "Space", "Science", "Art & Craft"],
-    Story: ["Bedtime Stories", "Moral Stories", "Adventure Tales"],
-    Play: ["Drawing", "Music & Dance", "Puzzles"],
-    Calm: ["Breathing", "Soft Music", "Sleep Stories"]
-  };
+ const data = {
+  Learn: [
+    { label: "Animals", emoji: "🐘" },
+    { label: "Space", emoji: "🚀" },
+    { label: "Science", emoji: "🔬" },
+    { label: "Art & Craft", emoji: "🎨" }
+  ],
+  Story: [
+    { label: "Bedtime Stories", emoji: "🌙" },
+    { label: "Moral Stories", emoji: "❤️" },
+    { label: "Adventure Tales", emoji: "🗺️" },
+    { label: "Funny Stories", emoji: "😂" }
+  ],
+  Play: [
+    { label: "Drawing", emoji: "✏️" },
+    { label: "Music & Dance", emoji: "🎵" },
+    { label: "Puzzles", emoji: "🧩" },
+    { label: "Build & Create", emoji: "🧱" }
+  ],
+  Calm: [
+    { label: "Breathing", emoji: "🌬️" },
+    { label: "Soft Music", emoji: "🎶" },
+    { label: "Sleep Stories", emoji: "🛌" },
+    { label: "Quiet Time", emoji: "🌈" }
+  ]
+};
+
 
   function showList(intent) {
     document.getElementById("intentScreen").style.display = "none";
