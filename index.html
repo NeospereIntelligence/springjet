@@ -1,107 +1,165 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Wonderjoy – Intent Screen</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Wonderjoy – Intent Flow</title>
 
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Arial Rounded MT Bold', Arial, sans-serif;
-      background: #F4F7FB;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
+<style>
+  body {
+    margin: 0;
+    font-family: 'Arial Rounded MT Bold', Arial, sans-serif;
+    background: #F4F7FB;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
 
-    .container {
-      width: 100%;
-      max-width: 360px;
-      padding: 24px;
-      text-align: center;
-    }
+  .container {
+    width: 100%;
+    max-width: 360px;
+    padding: 24px;
+    text-align: center;
+  }
 
-    h1 {
-      font-size: 26px;
-      color: #2E3A59;
-      margin-bottom: 32px;
-    }
+  h1 {
+    font-size: 24px;
+    color: #2E3A59;
+    margin-bottom: 24px;
+  }
 
-    .intent-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-    }
+  /* Intent Grid */
+  .intent-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
 
-    .intent-card {
-      background: white;
-      border-radius: 20px;
-      padding: 20px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-      cursor: pointer;
-      transition: transform 0.2s ease;
-    }
+  .intent-card {
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
 
-    .intent-card:hover {
-      transform: scale(1.05);
-    }
+  .intent-card:hover {
+    transform: scale(1.05);
+  }
 
-    .emoji {
-      font-size: 36px;
-      margin-bottom: 10px;
-    }
+  .emoji {
+    font-size: 36px;
+    margin-bottom: 8px;
+  }
 
-    .label {
-      font-size: 18px;
-      color: #2E3A59;
-    }
+  .label {
+    font-size: 18px;
+    color: #2E3A59;
+  }
 
-    /* Individual intent colors */
-    .learn { background: #E6F0FF; }
-    .story { background: #FFF4E6; }
-    .play  { background: #E8FFF3; }
-    .calm  { background: #F0ECFF; }
+  .learn { background: #E6F0FF; }
+  .story { background: #FFF4E6; }
+  .play  { background: #E8FFF3; }
+  .calm  { background: #F0ECFF; }
 
-  </style>
+  /* List Screen */
+  .list-screen {
+    display: none;
+  }
+
+  .list-item {
+    background: white;
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 14px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+    font-size: 16px;
+    color: #2E3A59;
+    cursor: pointer;
+  }
+
+  .back {
+    margin-top: 16px;
+    font-size: 14px;
+    color: #6B7A99;
+    cursor: pointer;
+  }
+</style>
 </head>
 
 <body>
 
-  <div class="container">
+<div class="container">
+
+  <!-- INTENT SCREEN -->
+  <div id="intentScreen">
     <h1>What do you feel like doing today?</h1>
 
     <div class="intent-grid">
-      <div class="intent-card learn" onclick="selectIntent('Learn')">
+      <div class="intent-card learn" onclick="showList('Learn')">
         <div class="emoji">📘</div>
         <div class="label">Learn</div>
       </div>
 
-      <div class="intent-card story" onclick="selectIntent('Story')">
+      <div class="intent-card story" onclick="showList('Story')">
         <div class="emoji">📖</div>
         <div class="label">Story</div>
       </div>
 
-      <div class="intent-card play" onclick="selectIntent('Play')">
+      <div class="intent-card play" onclick="showList('Play')">
         <div class="emoji">🎨</div>
         <div class="label">Play</div>
       </div>
 
-      <div class="intent-card calm" onclick="selectIntent('Calm')">
+      <div class="intent-card calm" onclick="showList('Calm')">
         <div class="emoji">🌙</div>
         <div class="label">Calm</div>
       </div>
     </div>
   </div>
 
-  <script>
-    function selectIntent(intent) {
-      alert("You chose: " + intent);
-      // Next step later:
-      // window.location.href = "videos.html?intent=" + intent;
-    }
-  </script>
+  <!-- LIST SCREEN -->
+  <div id="listScreen" class="list-screen">
+    <h1 id="listTitle"></h1>
+    <div id="listItems"></div>
+    <div class="back" onclick="goBack()">← Go back</div>
+  </div>
+
+</div>
+
+<script>
+  const data = {
+    Learn: ["Animals", "Space", "Science", "Art & Craft"],
+    Story: ["Bedtime Stories", "Moral Stories", "Adventure Tales"],
+    Play: ["Drawing", "Music & Dance", "Puzzles"],
+    Calm: ["Breathing", "Soft Music", "Sleep Stories"]
+  };
+
+  function showList(intent) {
+    document.getElementById("intentScreen").style.display = "none";
+    document.getElementById("listScreen").style.display = "block";
+
+    document.getElementById("listTitle").innerText =
+      "What would you like to " + intent.toLowerCase() + "?";
+
+    const list = document.getElementById("listItems");
+    list.innerHTML = "";
+
+    data[intent].forEach(item => {
+      const div = document.createElement("div");
+      div.className = "list-item";
+      div.innerText = item;
+      div.onclick = () => alert(intent + " → " + item);
+      list.appendChild(div);
+    });
+  }
+
+  function goBack() {
+    document.getElementById("listScreen").style.display = "none";
+    document.getElementById("intentScreen").style.display = "block";
+  }
+</script>
 
 </body>
 </html>
