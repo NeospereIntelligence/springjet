@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>What would you like to learn?</title>
-
   <style>
     body {
       margin: 0;
@@ -42,6 +41,8 @@
       box-shadow: 0 4px 10px rgba(0,0,0,0.08);
       cursor: pointer;
       transition: transform 0.2s ease;
+      text-decoration: none;
+      display: block;
     }
 
     .topic-card:hover {
@@ -56,6 +57,7 @@
     .label {
       font-size: 16px;
       color: #2E3A59;
+      font-weight: bold;
     }
 
     /* Topic colors */
@@ -63,17 +65,14 @@
     .space   { background: #EEF3FF; }
     .science { background: #FFF4E6; }
     .art     { background: #F0ECFF; }
-
   </style>
 </head>
-
 <body>
 
   <div class="container">
     <h1>What would you like to learn?</h1>
 
     <div class="topic-grid">
-
       <div class="topic-card animals" onclick="selectTopic('Animals')">
         <div class="emoji">🐘</div>
         <div class="label">Animals</div>
@@ -93,16 +92,16 @@
         <div class="emoji">🎨</div>
         <div class="label">Art & Craft</div>
       </div>
-
     </div>
   </div>
 
   <script>
-    function selectTopic(topic) 
-    {
-      alert("You chose: " + topic);
-      // Next step later:
-      // window.location.href = "videos.html?topic=" + topic;
+    function selectTopic(topic) {
+      if (topic === 'Animals') {
+        window.location.href = "videos.html";
+      } else {
+        alert(topic + " content is coming soon! Please click Animals.");
+      }
     }
   </script>
 
