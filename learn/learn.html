@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Learn</title>
+<style>
+body { font-family: Arial, sans-serif; background:#F4F7FB; text-align:center; }
+.container { max-width:360px; margin:auto; padding:24px; }
+.grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+.card { padding:22px; border-radius:20px; background:white; cursor:pointer; box-shadow:0 4px 10px rgba(0,0,0,0.08); }
+.emoji { font-size:36px; }
+.label { font-size:18px; margin-top:10px; display:block; color:#2E3A59; }
+.green { background:#E8FFF3; }
+.blue { background:#E6F0FF; }
+.orange { background:#FFF4E6; }
+.purple { background:#F0ECFF; }
+</style>
+</head>
+<body>
+
+<div class="container">
+<h1>What would you like to learn?</h1>
+<div class="grid">
+  <div class="card green" onclick="location.href='animal.html'">
+    <div class="emoji">🐘</div><span class="label">Animals</span>
+  </div>
+  <div class="card blue" onclick="location.href='space.html'">
+    <div class="emoji">🚀</div><span class="label">Space</span>
+  </div>
+  <div class="card orange" onclick="location.href='science.html'">
+    <div class="emoji">🔬</div><span class="label">Science</span>
+  </div>
+  <div class="card purple" onclick="location.href='art.html'">
+    <div class="emoji">🎨</div><span class="label">Art & Craft</span>
+  </div>
+</div>
+</div>
+</body>
+</html>
