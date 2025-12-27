@@ -29,28 +29,28 @@
     margin-bottom: 24px;
   }
 
-  /* Intent Grid */
-  .intent-grid {
+  /* GRID (used for both screens) */
+  .grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 20px;
   }
 
-  .intent-card {
+  .card {
     border-radius: 20px;
-    padding: 20px;
+    padding: 22px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.08);
     cursor: pointer;
     transition: transform 0.2s ease;
   }
 
-  .intent-card:hover {
+  .card:hover {
     transform: scale(1.05);
   }
 
   .emoji {
     font-size: 36px;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
   }
 
   .label {
@@ -58,29 +58,23 @@
     color: #2E3A59;
   }
 
-  .learn { background: #E6F0FF; }
-  .story { background: #FFF4E6; }
-  .play  { background: #E8FFF3; }
-  .calm  { background: #F0ECFF; }
+  /* COLORS */
+  .blue   { background: #E6F0FF; }
+  .orange { background: #FFF4E6; }
+  .green  { background: #E8FFF3; }
+  .purple { background: #F0ECFF; }
 
-  /* List Screen */
-  .list-screen {
+  /* SCREEN VISIBILITY */
+  .screen {
     display: none;
   }
 
-  .list-item {
-    background: white;
-    border-radius: 16px;
-    padding: 16px;
-    margin-bottom: 14px;
-    box-shadow: 0 3px 8px rgba(0,0,0,0.08);
-    font-size: 16px;
-    color: #2E3A59;
-    cursor: pointer;
+  .screen.active {
+    display: block;
   }
 
   .back {
-    margin-top: 16px;
+    margin-top: 20px;
     font-size: 14px;
     color: #6B7A99;
     cursor: pointer;
@@ -92,93 +86,97 @@
 
 <div class="container">
 
-  <!-- INTENT SCREEN -->
-  <div id="intentScreen">
+  <!-- SCREEN 1: INTENT -->
+  <div id="intentScreen" class="screen active">
     <h1>What do you feel like doing today?</h1>
 
-    <div class="intent-grid">
-      <div class="intent-card learn" onclick="showList('Learn')">
+    <div class="grid">
+      <div class="card blue" onclick="showTopics('Learn')">
         <div class="emoji">📘</div>
         <div class="label">Learn</div>
       </div>
 
-      <div class="intent-card story" onclick="showList('Story')">
+      <div class="card orange" onclick="showTopics('Story')">
         <div class="emoji">📖</div>
         <div class="label">Story</div>
       </div>
 
-      <div class="intent-card play" onclick="showList('Play')">
+      <div class="card green" onclick="showTopics('Play')">
         <div class="emoji">🎨</div>
         <div class="label">Play</div>
       </div>
 
-      <div class="intent-card calm" onclick="showList('Calm')">
+      <div class="card purple" onclick="showTopics('Calm')">
         <div class="emoji">🌙</div>
         <div class="label">Calm</div>
       </div>
     </div>
   </div>
 
-  <!-- LIST SCREEN -->
-  <div id="listScreen" class="list-screen">
-    <h1 id="listTitle"></h1>
-    <div id="listItems"></div>
+  <!-- SCREEN 2: TOPICS -->
+  <div id="topicScreen" class="screen">
+    <h1 id="topicTitle"></h1>
+
+    <div class="grid" id="topicGrid"></div>
+
     <div class="back" onclick="goBack()">← Go back</div>
   </div>
 
 </div>
 
 <script>
- const data = {
-  Learn: [
-    { label: "Animals", emoji: "🐘" },
-    { label: "Space", emoji: "🚀" },
-    { label: "Science", emoji: "🔬" },
-    { label: "Art & Craft", emoji: "🎨" }
-  ],
-  Story: [
-    { label: "Bedtime Stories", emoji: "🌙" },
-    { label: "Moral Stories", emoji: "❤️" },
-    { label: "Adventure Tales", emoji: "🗺️" },
-    { label: "Funny Stories", emoji: "😂" }
-  ],
-  Play: [
-    { label: "Drawing", emoji: "✏️" },
-    { label: "Music & Dance", emoji: "🎵" },
-    { label: "Puzzles", emoji: "🧩" },
-    { label: "Build & Create", emoji: "🧱" }
-  ],
-  Calm: [
-    { label: "Breathing", emoji: "🌬️" },
-    { label: "Soft Music", emoji: "🎶" },
-    { label: "Sleep Stories", emoji: "🛌" },
-    { label: "Quiet Time", emoji: "🌈" }
-  ]
-};
+  const data = {
+    Learn: [
+      { label: "Animals", emoji: "🐘", color: "green" },
+      { label: "Space", emoji: "🚀", color: "blue" },
+      { label: "Science", emoji: "🔬", color: "orange" },
+      { label: "Art & Craft", emoji: "🎨", color: "purple" }
+    ],
+    Story: [
+      { label: "Bedtime", emoji: "🌙", color: "purple" },
+      { label: "Moral", emoji: "❤️", color: "orange" },
+      { label: "Adventure", emoji: "🗺️", color: "blue" },
+      { label: "Funny", emoji: "😂", color: "green" }
+    ],
+    Play: [
+      { label: "Drawing", emoji: "✏️", color: "orange" },
+      { label: "Music", emoji: "🎵", color: "green" },
+      { label: "Puzzles", emoji: "🧩", color: "blue" },
+      { label: "Build", emoji: "🧱", color: "purple" }
+    ],
+    Calm: [
+      { label: "Breathing", emoji: "🌬️", color: "blue" },
+      { label: "Soft Music", emoji: "🎶", color: "green" },
+      { label: "Sleep", emoji: "🛌", color: "purple" },
+      { label: "Quiet Time", emoji: "🌈", color: "orange" }
+    ]
+  };
 
+  function showTopics(intent) {
+    document.getElementById("intentScreen").classList.remove("active");
+    document.getElementById("topicScreen").classList.add("active");
 
-  function showList(intent) {
-    document.getElementById("intentScreen").style.display = "none";
-    document.getElementById("listScreen").style.display = "block";
-
-    document.getElementById("listTitle").innerText =
+    document.getElementById("topicTitle").innerText =
       "What would you like to " + intent.toLowerCase() + "?";
 
-    const list = document.getElementById("listItems");
-    list.innerHTML = "";
+    const grid = document.getElementById("topicGrid");
+    grid.innerHTML = "";
 
     data[intent].forEach(item => {
       const div = document.createElement("div");
-      div.className = "list-item";
-      div.innerText = item;
-      div.onclick = () => alert(intent + " → " + item);
-      list.appendChild(div);
+      div.className = `card ${item.color}`;
+      div.innerHTML = `
+        <div class="emoji">${item.emoji}</div>
+        <div class="label">${item.label}</div>
+      `;
+      div.onclick = () => alert(intent + " → " + item.label);
+      grid.appendChild(div);
     });
   }
 
   function goBack() {
-    document.getElementById("listScreen").style.display = "none";
-    document.getElementById("intentScreen").style.display = "block";
+    document.getElementById("topicScreen").classList.remove("active");
+    document.getElementById("intentScreen").classList.add("active");
   }
 </script>
 
