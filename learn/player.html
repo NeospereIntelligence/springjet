@@ -2,65 +2,181 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Video Player</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wonderjoy Player</title>
 
 <style>
 body {
   margin: 0;
+  font-family: Arial, sans-serif;
+  background: #F4F7FB;
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+}
+
+.container {
+  max-width: 360px;
+  width: 100%;
+}
+
+.breadcrumb {
+  cursor: pointer;
+  color: #7DA4C3;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.video-box {
+  width: 100%;
+  aspect-ratio: 4 / 3;
   background: #000;
-  font-family: Arial;
+  border-radius: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Play overlay */
+.overlay {
+  position: absolute;
+  inset: 0;
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0,0,0,0.35);
+  cursor: pointer;
+  z-index: 10;
+}
+
+.play-icon {
+  width: 60px;
+  height: 60px;
+  background: #A0C4FF;
+  border-radius: 14px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 14px;
+  box-shadow: 0 4px 0 #7DA4C3;
+}
+
+.play-arrow {
+  width: 0;
+  height: 0;
+  border-top: 12px solid transparent;
+  border-bottom: 12px solid transparent;
+  border-left: 20px solid #fff;
+  margin-left: 4px;
+}
+
+.tap-text {
+  color: white;
+  font-size: 18px;
+}
+
+/* YouTube iframe */
+#player {
+  width: 100%;
+  height: 100%;
+}
+
+/* Next page overlay */
+#nextOverlay {
+  display: none;
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  z-index: 20;
+  justify-content: center;
   align-items: center;
 }
 
-#player {
-  width: 100%;
-  max-width: 800px;
-  height: 450px;
-}
-
 #nextBtn {
-  display: none;
-  margin: 20px 0;
-  padding: 14px 28px;
-  background: #4CAF50;
-  color: white;
+  padding: 16px 32px;
+  background: #A0C4FF;
   border: none;
   border-radius: 30px;
   font-size: 18px;
+  font-weight: 600;
   cursor: pointer;
+}
+
+/* Info section */
+.info-section {
+  margin-top: 20px;
+}
+
+h2 {
+  font-size: 20px;
+  margin: 0 0 6px;
+  color: #444;
+}
+
+.duration {
+  font-size: 14px;
+  color: #888;
 }
 </style>
 </head>
 
 <body>
+<div class="container">
 
-<div id="player"></div>
+  <div class="breadcrumb" onclick="window.history.back()">← Back</div>
 
-<button id="nextBtn" onclick="goNext()">Next Page ▶</button>
+  <div class="video-box">
+
+    <!-- Tap to play overlay -->
+    <div id="overlay" class="overlay">
+      <div class="play-icon"><div class="play-arrow"></div></div>
+      <div class="tap-text">Tap to play</div>
+    </div>
+
+    <!-- Next Page overlay -->
+    <div id="nextOverlay">
+      <button id="nextBtn" onclick="goNext()">Next Page ▶</button>
+    </div>
+
+    <!-- YouTube Player -->
+    <div id="player"></div>
+  </div>
+
+  <div class="info-section">
+    <h2 id="videoTitle">Loading...</h2>
+    <div class="duration" id="videoTime">-- min</div>
+  </div>
+
+</div>
 
 <script>
+/* Get URL parameters */
 const params = new URLSearchParams(window.location.search);
-const videoId = params.get("id");
+const videoId = params.get("id") || "PbYOP8gJY_w";
+const title = params.get("title") || "Wonderjoy Video";
+const duration = params.get("duration") || "5 min";
 
-// Load YouTube API
-var tag = document.createElement('script');
+document.getElementById("videoTitle").innerText = title;
+document.getElementById("videoTime").innerText = duration;
+
+/* Load YouTube IFrame API */
+const tag = document.createElement("script");
 tag.src = "https://www.youtube.com/iframe_api";
-document.body.appendChild(tag);
+document.head.appendChild(tag);
 
-var player;
+let player;
 
+/* Create player */
 function onYouTubeIframeAPIReady() {
-  player = new YT.Player('player', {
+  player = new YT.Player("player", {
     videoId: videoId,
     playerVars: {
       autoplay: 0,
       controls: 1,
-      rel: 0,          // ❌ removes related videos
+      rel: 0,
       modestbranding: 1,
-      fs: 1
+      fs: 1,
+      playsinline: 1
     },
     events: {
       onStateChange: onPlayerStateChange
@@ -68,13 +184,22 @@ function onYouTubeIframeAPIReady() {
   });
 }
 
-// Detect video end
+/* Detect video end */
 function onPlayerStateChange(event) {
   if (event.data === YT.PlayerState.ENDED) {
-    document.getElementById("nextBtn").style.display = "block";
+    document.getElementById("nextOverlay").style.display = "flex";
   }
 }
 
+/* Tap to play */
+document.getElementById("overlay").onclick = function () {
+  if (player && player.playVideo) {
+    player.playVideo();
+    this.style.display = "none";
+  }
+};
+
+/* Next page navigation */
 function goNext() {
   window.location.href = "nextpage.html";
 }
