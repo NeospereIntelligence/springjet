@@ -2,75 +2,83 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<title>Video Player</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Wonderjoy Player</title>
+
 <style>
-  body { margin:0; font-family: Arial, sans-serif; background:#F4F7FB; display:flex; justify-content:center; padding:20px; }
-  .container { max-width:360px; width:100%; }
-  .breadcrumb { cursor:pointer; color:#7DA4C3; font-weight:600; margin-bottom:20px; }
-  .video-box { width:100%; aspect-ratio:4/3; background:#000; border-radius:20px; position:relative; overflow:hidden; display:flex; justify-content:center; align-items:center; }
-  .overlay { position:absolute; width:100%; height:100%; display:flex; flex-direction:column; justify-content:center; align-items:center; cursor:pointer; background:rgba(0,0,0,0.3); z-index:10; }
-  .play-icon { width:60px; height:60px; background:#A0C4FF; border-radius:12px; display:flex; justify-content:center; align-items:center; margin-bottom:15px; box-shadow:0 4px 0 #7DA4C3; }
-  .play-arrow { width:0; height:0; border-top:12px solid transparent; border-bottom:12px solid transparent; border-left:20px solid white; margin-left:5px; }
-  .tap-text { color:white; font-size:18px; font-weight:500; }
-  #player { width:100%; height:100%; }
-  .info-section { margin-top:20px; }
-  h2 { font-size:20px; margin:0 0 5px 0; color:#444; }
-  .duration { font-size:14px; color:#888; margin-bottom:10px; }
+body {
+  margin: 0;
+  background: #000;
+  font-family: Arial;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#player {
+  width: 100%;
+  max-width: 800px;
+  height: 450px;
+}
+
+#nextBtn {
+  display: none;
+  margin: 20px 0;
+  padding: 14px 28px;
+  background: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 30px;
+  font-size: 18px;
+  cursor: pointer;
+}
 </style>
 </head>
+
 <body>
-<div class="container">
-  <div class="breadcrumb" onclick="window.history.back()">← Back</div>
 
-  <div class="video-box">
-    <div id="overlay" class="overlay">
-      <div class="play-icon"><div class="play-arrow"></div></div>
-      <div class="tap-text">Tap to play</div>
-    </div>
-    <div id="player"></div>
-  </div>
+<div id="player"></div>
 
-  <div class="info-section">
-    <h2 id="videoTitle">Loading...</h2>
-    <div class="duration" id="videoTime">-- min</div>
-  </div>
-</div>
+<button id="nextBtn" onclick="goNext()">Next Page ▶</button>
 
 <script>
-  const urlParams = new URLSearchParams(window.location.search);
-  const videoId = urlParams.get('id') || 'PbYOP8gJY_w';
-  const title = urlParams.get('title') || 'Default Video';
-  const duration = urlParams.get('duration') || '5 min';
+const params = new URLSearchParams(window.location.search);
+const videoId = params.get("id");
 
-  document.getElementById('videoTitle').innerText = title;
-  document.getElementById('videoTime').innerText = duration;
+// Load YouTube API
+var tag = document.createElement('script');
+tag.src = "https://www.youtube.com/iframe_api";
+document.body.appendChild(tag);
 
-  // Load YouTube IFrame API
-  let tag = document.createElement('script');
-  tag.src = "https://www.youtube.com/iframe_api";
-  document.head.appendChild(tag);
+var player;
 
-  let player;
-  function onYouTubeIframeAPIReady() {
-    player = new YT.Player('player', {
-      videoId: videoId,
-      playerVars: {
-        autoplay: 0,
-        controls: 1,
-        rel: 0,
-        modestbranding: 1,
-        playsinline: 1
-      }
-    });
-  }
-
-  document.getElementById('overlay').addEventListener('click', function(){
-    if(player && player.playVideo) {
-      player.playVideo();
-      this.style.display = 'none';
+function onYouTubeIframeAPIReady() {
+  player = new YT.Player('player', {
+    videoId: videoId,
+    playerVars: {
+      autoplay: 0,
+      controls: 1,
+      rel: 0,          // ❌ removes related videos
+      modestbranding: 1,
+      fs: 1
+    },
+    events: {
+      onStateChange: onPlayerStateChange
     }
   });
+}
+
+// Detect video end
+function onPlayerStateChange(event) {
+  if (event.data === YT.PlayerState.ENDED) {
+    document.getElementById("nextBtn").style.display = "block";
+  }
+}
+
+function goNext() {
+  window.location.href = "nextpage.html";
+}
 </script>
+
 </body>
 </html>
