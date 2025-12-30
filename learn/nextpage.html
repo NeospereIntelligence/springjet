@@ -6,235 +6,241 @@
 <title>Wonderjoy – Quiz</title>
 
 <style>
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #F4F7FB;
-  display: flex;
-  justify-content: center;
-  padding: 20px;
-}
+  :root {
+    --primary: #6C63FF;
+    --primary-light: #E0E7FF;
+    --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    --text-main: #2D3436;
+    --text-muted: #636E72;
+  }
 
-.container {
-  max-width: 360px;
-  width: 100%;
-  text-align: center;
-}
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg-gradient);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;
+  }
 
-/* Quiz */
-.question {
-  font-size: 22px;
-  margin-bottom: 20px;
-  text-align: center;
-}
+  .card {
+    background: white;
+    max-width: 400px;
+    width: 100%;
+    padding: 40px 30px;
+    border-radius: 24px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    text-align: center;
+    transition: transform 0.3s ease;
+  }
 
-.option {
-  background: white;
-  padding: 14px;
-  border-radius: 14px;
-  margin-bottom: 12px;
-  cursor: pointer;
-  border: 2px solid #eee;
-  font-size: 18px;
-  transition: all 0.2s ease;
-}
+  h2 {
+    color: var(--text-main);
+    margin-bottom: 25px;
+    font-size: 24px;
+  }
 
-.option:hover {
-  border-color: #A0C4FF;
-}
+  /* Quiz Styling */
+  .option {
+    background: #FBFCFF;
+    padding: 16px;
+    border-radius: 16px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    border: 2px solid #F1F3F9;
+    font-size: 18px;
+    font-weight: 500;
+    transition: all 0.2s ease-in-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
 
-.option.selected {
-  border-color: #007BFF;
-  background: #D0E6FF;
-}
+  .option:hover {
+    border-color: var(--primary);
+    transform: translateY(-2px);
+    background: white;
+  }
 
-.submit-btn {
-  margin-top: 20px;
-  padding: 14px 26px;
-  background: #A0C4FF;
-  border: none;
-  border-radius: 30px;
-  font-size: 16px;
-  cursor: pointer;
-}
+  .option.selected {
+    border-color: var(--primary);
+    background: var(--primary-light);
+    color: var(--primary);
+  }
 
-/* Thank you page */
-.thumbnail {
-  width: 100%;
-  border-radius: 20px;
-  margin: 20px 0;
-}
+  .submit-btn {
+    margin-top: 20px;
+    width: 100%;
+    padding: 16px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(108, 99, 255, 0.3);
+    transition: opacity 0.2s;
+  }
 
-.hidden {
-  display: none;
-}
+  .submit-btn:hover {
+    opacity: 0.9;
+  }
 
-/* Parent section */
-.parent-btn {
-  margin-top: 20px;
-  font-size: 14px;
-  color: #777;
-  cursor: pointer;
-  text-decoration: underline;
-}
+  /* Thank You Section */
+  .thumbnail {
+    width: 100%;
+    max-width: 280px;
+    height: auto;
+    border-radius: 20px;
+    margin: 10px 0 25px;
+  }
 
-.parent-actions {
-  margin-top: 20px;
-}
+  .hidden { display: none; }
 
-.action-btn {
-  padding: 14px;
-  width: 100%;
-  border-radius: 30px;
-  border: none;
-  font-size: 16px;
-  margin-bottom: 12px;
-  cursor: pointer;
-}
+  /* Parent Gate */
+  .parent-link {
+    margin-top: 25px;
+    font-size: 14px;
+    color: var(--text-muted);
+    cursor: pointer;
+    text-decoration: underline;
+  }
 
-.done {
-  background: #A0C4FF;
-}
+  #parentPasswordSection {
+    margin-top: 20px;
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 15px;
+  }
 
-.back {
-  background: #E0E0E0;
-}
+  #parentPassword {
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    width: 80%;
+    margin-bottom: 15px;
+    font-size: 16px;
+    text-align: center;
+  }
 
-/* Parent password input */
-#parentPasswordSection {
-  margin-top: 10px;
-  display: none;
-}
+  .action-btn {
+    padding: 14px;
+    width: 100%;
+    border-radius: 50px;
+    border: none;
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: 0.2s;
+  }
 
-#parentPassword {
-  padding: 10px;
-  border-radius: 10px;
-  border: 1px solid #ccc;
-  width: 70%;
-  margin-bottom: 10px;
-  font-size: 16px;
-}
+  .done { background: #00B894; color: white; }
+  .back { background: #DFE6E9; color: var(--text-main); }
 
-#parentUnlockBtn {
-  padding: 10px 20px;
-  font-size: 16px;
-  border: none;
-  border-radius: 20px;
-  background: #A0C4FF;
-  cursor: pointer;
-}
 </style>
 </head>
 
 <body>
-<div class="container">
 
-  <!-- QUIZ -->
+<div class="card">
   <div id="quiz">
-    <div class="question">🎬 How did you enjoy watching the video?</div>
+    <h2>How was the video?</h2>
+    
+    <div class="option" onclick="selectOption(this)"><span>😄</span> Enjoyed it!</div>
+    <div class="option" onclick="selectOption(this)"><span>🙂</span> It was nice</div>
+    <div class="option" onclick="selectOption(this)"><span>😐</span> Just okay</div>
+    <div class="option" onclick="selectOption(this)"><span>🙁</span> Not for me</div>
 
-    <div class="option" onclick="selectOption(this)">😄 Enjoy</div>
-    <div class="option" onclick="selectOption(this)">🙂 Nice</div>
-    <div class="option" onclick="selectOption(this)">😐 Okay</div>
-    <div class="option" onclick="selectOption(this)">🙁 Not good</div>
-
-    <button class="submit-btn" onclick="submitQuiz()">Submit</button>
+    <button class="submit-btn" onclick="submitQuiz()">Send Feedback</button>
   </div>
 
-  <!-- THANK YOU -->
   <div id="thanks" class="hidden">
-    <h2>🎉 Thank you for watching!</h2>
-    <img src="https://via.placeholder.com/350x200?text=Great+Job!" class="thumbnail">
+    <h2 style="margin-bottom: 10px;">Great Job!</h2>
+    <p style="color: #636E72;">Thank you for watching</p>
+    
+    <img src="https://img.freepik.com/free-vector/successful-businessman-celebrating-victory_1150-39772.jpg?t=st=1715850000&exp=1715853600&hmac=placeholder" alt="Success" class="thumbnail">
 
-    <!-- Parent gate -->
-    <div class="parent-btn" onclick="showParentPassword()">Parents: Tap here</div>
+    <div class="parent-link" onclick="showParentPassword()">Parents: Settings</div>
 
-    <!-- Parent password input -->
-    <div id="parentPasswordSection">
-      <input type="password" id="parentPassword" placeholder="Enter Parent Password">
-      <br>
-      <button id="parentUnlockBtn" onclick="unlockParent()">Unlock</button>
-      <p id="setPasswordNote" style="font-size:12px;color:#555;margin-top:6px;"></p>
+    <div id="parentPasswordSection" class="hidden">
+      <input type="password" id="parentPassword" placeholder="Enter PIN">
+      <button class="submit-btn" style="margin-top:0" onclick="unlockParent()">Unlock</button>
+      <p id="setPasswordNote" style="font-size:11px; color:#b2bec3; margin-top:10px;"></p>
     </div>
 
-    <!-- Parent-only buttons -->
-    <div id="parentActions" class="parent-actions hidden">
-      <button class="action-btn done" onclick="doneNow()">You're done for now</button>
-      <button class="action-btn back" onclick="goBack()">Go back to list</button>
+    <div id="parentActions" class="hidden" style="margin-top: 20px;">
+      <button class="action-btn done" onclick="doneNow()">Finish Session</button>
+      <button class="action-btn back" onclick="goBack()">Back to Videos</button>
     </div>
   </div>
-
 </div>
 
 <script>
 let selectedOption = null;
 
-/* Highlight selected option */
 function selectOption(el) {
   if (selectedOption) selectedOption.classList.remove('selected');
   el.classList.add('selected');
   selectedOption = el;
 }
 
-/* Submit quiz */
 function submitQuiz() {
   if (!selectedOption) {
-    alert("Please select an option before submitting.");
+    alert("Please pick an emoji first!");
     return;
   }
   document.getElementById("quiz").classList.add("hidden");
   document.getElementById("thanks").classList.remove("hidden");
 }
 
-/* Show parent password input */
 function showParentPassword() {
-  document.getElementById("parentPasswordSection").style.display = "block";
+  const section = document.getElementById("parentPasswordSection");
+  section.classList.toggle("hidden");
 
-  // Check if password already set
   const savedPassword = localStorage.getItem("parentPassword");
   const note = document.getElementById("setPasswordNote");
-  if (!savedPassword) {
-    note.innerText = "No password set yet. Enter new password to save.";
-  } else {
-    note.innerText = "Enter parent password to unlock buttons.";
-  }
+  note.innerText = !savedPassword 
+    ? "Create a 4-digit PIN for first-time use." 
+    : "Enter your PIN to access parent controls.";
 }
 
-/* Unlock parent buttons using password */
 function unlockParent() {
   const input = document.getElementById("parentPassword").value;
   const savedPassword = localStorage.getItem("parentPassword");
 
   if (!savedPassword) {
-    // No password saved yet → save the input as password
     if (input.length < 4) {
-      alert("Password too short. Minimum 4 characters.");
+      alert("Please enter at least 4 characters.");
       return;
     }
     localStorage.setItem("parentPassword", input);
-    alert("Password saved! Use it next time to unlock parent buttons.");
-    document.getElementById("parentActions").classList.remove("hidden");
-    document.getElementById("parentPasswordSection").style.display = "none";
+    proceedToActions();
   } else {
-    // Compare input with saved password
     if (input === savedPassword) {
-      document.getElementById("parentActions").classList.remove("hidden");
-      document.getElementById("parentPasswordSection").style.display = "none";
+      proceedToActions();
     } else {
-      alert("Incorrect password. Parents only.");
+      alert("Wrong password.");
     }
   }
-
   document.getElementById("parentPassword").value = "";
 }
 
-/* Parent buttons actions */
+function proceedToActions() {
+  document.getElementById("parentActions").classList.remove("hidden");
+  document.getElementById("parentPasswordSection").classList.add("hidden");
+}
+
 function doneNow() {
-  alert("Session ended. Great job!");
+  alert("Session ended successfully!");
 }
 
 function goBack() {
-  window.location.href = "../index.html"; // your video list page
+  window.location.href = "../index.html";
 }
 </script>
 
