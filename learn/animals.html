@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -56,45 +55,6 @@ h2 { font-size:32px; margin-bottom:30px; text-align:center; }
 function play(id,title){
   location.href=`player.html?id=${id}&title=${encodeURIComponent(title)}`;
 }
-</script>
- <script>
-async function loadVideos() {
-    const CATEGORY_TO_LOAD = "Animal"; 
-    const response = await fetch('../Video_list.csv');
-    const data = await response.text();
-    const rows = data.split('\n').slice(1);
-    
-    const listContainer = document.querySelector('.video-list');
-    listContainer.innerHTML = ""; // Clear existing static cards
-
-    rows.forEach(row => {
-        const [id, mood, category, videoUrl, title, duration] = row.split(',');
-        
-        if (category && category.trim() === CATEGORY_TO_LOAD) {
-            const ytId = extractId(videoUrl);
-            listContainer.innerHTML += `
-                <div class="video-card" onclick="play('${ytId}','${title}','${duration}')">
-                    <img class="thumbnail" src="https://img.youtube.com/vi/${ytId}/mqdefault.jpg">
-                    <div class="video-info">
-                        <div class="duration">${duration}</div>
-                        <div class="title">${title}</div>
-                        <div class="metadata">Tap to play • Safe Content</div>
-                    </div>
-                </div>`;
-        }
-    });
-}
-
-function extractId(url) {
-    const match = url.match(/(?:https?:\/{2})?(?:w{3}\.)?youtu(?:be)?\.(?:com|be)(?:\/watch\?v=|\/)([^\s&]+)/);
-    return match ? match[1].trim() : "";
-}
-
-function play(id, title, time) {
-    window.location.href = `../player.html?id=${id}&title=${encodeURIComponent(title)}&duration=${time}`;
-}
-
-loadVideos();
 </script>
 </body>
 </html>
