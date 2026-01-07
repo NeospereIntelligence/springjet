@@ -171,6 +171,51 @@ function goBack() {
   document.getElementById("intentScreen").classList.add("active");
 }
 </script>
+/* index.html - Dynamic Topic Logic */
+let masterData = [];
 
+async function initHome() {
+  // Load the CSV file
+  const response = await fetch('Video_list.csv');
+  const data = await response.text();
+  
+  // Parse rows into objects
+  const rows = data.split('\n').slice(1);
+  masterData = rows.map(row => {
+    const cols = row.split(',');
+    return {
+      mood: cols[1]?.trim(),
+      category: cols[2]?.trim(),
+      url: cols[3]?.trim()
+    };
+  }).filter(r => r.mood);
+}
+
+function showTopics(intent) {
+  document.getElementById("intentScreen").classList.remove("active");
+  document.getElementById("topicScreen").classList.add("active");
+  document.getElementById("topicTitle").innerText = `What would you like to ${intent.toLowerCase()}?`;
+
+  const grid = document.getElementById("topicGrid");
+  grid.innerHTML = "";
+
+  // Find unique categories for the selected Mood
+  const uniqueCategories = [...new Set(
+    masterData.filter(v => v.mood === intent).map(v => v.category)
+  )];
+
+  uniqueCategories.forEach(cat => {
+    const div = document.createElement("div");
+    div.className = `card blue`; // Default color
+    div.innerHTML = `<div class="emoji">⭐</div><div class="label">${cat}</div>`;
+    div.onclick = () => {
+      // Directs to category page (e.g., learn/animal.html)
+      window.location.href = `learn/${cat.toLowerCase()}.html`;
+    };
+    grid.appendChild(div);
+  });
+}
+
+initHome();
 </body>
 </html>
