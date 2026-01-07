@@ -5,163 +5,146 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Wonderjoy – Intent Flow</title>
 <style>
-body {
-  margin: 0;
-  font-family: 'Arial Rounded MT Bold', Arial, sans-serif;
-  background: #F4F7FB;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-
-.container {
-  width: 100%;
-  max-width: 360px;
-  padding: 24px;
-  text-align: center;
-}
-
-h1 {
-  font-size: 24px;
-  color: #2E3A59;
-  margin-bottom: 24px;
-}
-
-.grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-}
-
-.card {
-  border-radius: 20px;
-  padding: 22px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-  cursor: pointer;
-  transition: transform 0.2s ease;
-}
-
-.card:hover {
-  transform: scale(1.05);
-}
-
-.emoji {
-  font-size: 36px;
-  margin-bottom: 10px;
-}
-
-.label {
-  font-size: 18px;
-  color: #2E3A59;
-}
-
-/* colors */
-.blue { background: #E6F0FF; }
-.orange { background: #FFF4E6; }
-.green { background: #E8FFF3; }
-.purple { background: #F0ECFF; }
-
-.screen { display: none; }
-.screen.active { display: block; }
-
-.back {
-  margin-top: 20px;
-  font-size: 14px;
-  color: #6B7A99;
-  cursor: pointer;
-}
+  body {
+    margin: 0;
+    font-family: 'Arial Rounded MT Bold', Arial, sans-serif;
+    background: #F4F7FB;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  .container {
+    width: 100%;
+    max-width: 360px;
+    padding: 24px;
+    text-align: center;
+  }
+  h1 { font-size: 24px; color: #2E3A59; margin-bottom: 24px; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .card {
+    border-radius: 20px;
+    padding: 22px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+  .card:hover { transform: scale(1.05); }
+  .emoji { font-size: 36px; margin-bottom: 10px; }
+  .label { font-size: 18px; color: #2E3A59; }
+  .blue { background: #E6F0FF; }
+  .orange { background: #FFF4E6; }
+  .green { background: #E8FFF3; }
+  .purple { background: #F0ECFF; }
+  .screen { display: none; }
+  .screen.active { display: block; }
+  .back { margin-top: 20px; font-size: 14px; color: #6B7A99; cursor: pointer; text-decoration: underline; }
 </style>
 </head>
 <body>
 
 <div class="container">
-
-  <!-- INTENT SCREEN -->
   <div id="intentScreen" class="screen active">
     <h1>What do you feel like doing today?</h1>
     <div class="grid">
-      <div class="card blue" onclick="showTopics('Learn')">
+      <div class="card blue" onclick="handleIntentClick('Learn')">
         <div class="emoji">📘</div>
         <div class="label">Learn</div>
       </div>
-      <div class="card orange" onclick="showTopics('Story')">
+      <div class="card orange" onclick="handleIntentClick('Story')">
         <div class="emoji">📖</div>
         <div class="label">Story</div>
       </div>
-      <div class="card green" onclick="showTopics('Play')">
+      <div class="card green" onclick="handleIntentClick('Play')">
         <div class="emoji">🎨</div>
         <div class="label">Play</div>
       </div>
-      <div class="card purple" onclick="showTopics('Calm')">
+      <div class="card purple" onclick="handleIntentClick('Calm')">
         <div class="emoji">🌙</div>
         <div class="label">Calm</div>
       </div>
     </div>
   </div>
 
-  <!-- TOPIC SCREEN -->
   <div id="topicScreen" class="screen">
     <h1 id="topicTitle"></h1>
     <div class="grid" id="topicGrid"></div>
     <div class="back" onclick="goBack()">← Go back</div>
   </div>
-
 </div>
 
 <script>
-const data = {
-  Learn: [
-    { label: "Animals", emoji: "🐘", color: "green", page: "learn/animals.html" },
-    { label: "Space", emoji: "🚀", color: "blue", page: "learn/space.html" },
-    { label: "Science", emoji: "🔬", color: "orange", page: "learn/science.html" },
-    { label: "Art & Craft", emoji: "🎨", color: "purple", page: "learn/art.html" }
-  ],
-  Story: [
-    { label: "Bedtime", emoji: "🌙", color: "purple", page: "story/bedtime.html" },
-    { label: "Moral", emoji: "❤️", color: "orange", page: "story/moral.html" },
-    { label: "Adventure", emoji: "🗺️", color: "blue", page: "story/adventure.html" },
-    { label: "Funny", emoji: "😂", color: "green", page: "story/funny.html" }
-  ],
-  Play: [
-    { label: "Drawing", emoji: "✏️", color: "orange" },
-    { label: "Music", emoji: "🎵", color: "green" },
-    { label: "Puzzles", emoji: "🧩", color: "blue" },
-    { label: "Build", emoji: "🧱", color: "purple" }
-  ],
-  Calm: [
-    { label: "Breathing", emoji: "🌬️", color: "blue" },
-    { label: "Soft Music", emoji: "🎶", color: "green" },
-    { label: "Sleep", emoji: "🛌", color: "purple" },
-    { label: "Quiet Time", emoji: "🌈", color: "orange" }
-  ]
-};
+let masterData = [];
 
+// 1. Initialize and Load CSV
+async function initHome() {
+  try {
+    const response = await fetch('Video_list.csv');
+    const csvText = await response.text();
+    
+    // Parse CSV rows
+    const rows = csvText.split('\n').slice(1);
+    masterData = rows.map(row => {
+      const cols = row.split(',');
+      return {
+        id: cols[0]?.trim(),
+        mood: cols[1]?.trim(),      // e.g., Learn
+        category: cols[2]?.trim(),  // e.g., Animal
+        url: cols[3]?.trim()
+      };
+    }).filter(r => r.mood && r.category); // Only keep valid rows
 
+    console.log("CSV Data Loaded Successfully");
+  } catch (error) {
+    console.error("Error loading CSV:", error);
+    alert("Make sure Video_list.csv is in the same folder!");
+  }
+}
+
+// 2. Handle the first click (Learn/Story/etc)
+function handleIntentClick(intent) {
+  showTopics(intent);
+}
+
+// 3. Filter Categories based on the Intent and CSV
 function showTopics(intent) {
-  document.getElementById("intentScreen").classList.remove("active");
-  document.getElementById("topicScreen").classList.add("active");
-
-  document.getElementById("topicTitle").innerText =
-    "What would you like to " + intent.toLowerCase() + "?";
-
+  const intentScreen = document.getElementById("intentScreen");
+  const topicScreen = document.getElementById("topicScreen");
+  const topicTitle = document.getElementById("topicTitle");
   const grid = document.getElementById("topicGrid");
+
+  intentScreen.classList.remove("active");
+  topicScreen.classList.add("active");
+  topicTitle.innerText = `What would you like to ${intent.toLowerCase()}?`;
+
   grid.innerHTML = "";
 
-  data[intent].forEach(item => {
+  // Find unique categories for the selected Mood from our CSV data
+  const categoriesForMood = masterData.filter(v => v.mood.toLowerCase() === intent.toLowerCase());
+  const uniqueCategories = [...new Set(categoriesForMood.map(v => v.category))];
+
+  if (uniqueCategories.length === 0) {
+    grid.innerHTML = "<p>No topics found in CSV for this mood.</p>";
+    return;
+  }
+
+  uniqueCategories.forEach(cat => {
     const div = document.createElement("div");
-    div.className = `card ${item.color}`;
-    div.innerHTML = `<div class="emoji">${item.emoji}</div><div class="label">${item.label}</div>`;
+    // Assign colors based on category name or default to blue
+    div.className = `card blue`; 
+    
+    // Mapping some default emojis if needed
+    let icon = "⭐";
+    if(cat.toLowerCase().includes("animal")) icon = "🐘";
+    if(cat.toLowerCase().includes("space")) icon = "🚀";
+    if(cat.toLowerCase().includes("science")) icon = "🔬";
 
+    div.innerHTML = `<div class="emoji">${icon}</div><div class="label">${cat}</div>`;
+    
     div.onclick = () => {
-      if(item.page){
-        // Navigate to the corresponding Learn subpage
-        window.location.href = item.page;
-      } else {
-        alert(item.label + " content is coming soon!");
-      }
+      // Directs to the specific category page
+      window.location.href = `learn/${cat.toLowerCase()}.html`;
     };
-
     grid.appendChild(div);
   });
 }
@@ -170,52 +153,10 @@ function goBack() {
   document.getElementById("topicScreen").classList.remove("active");
   document.getElementById("intentScreen").classList.add("active");
 }
-</script>
-/* index.html - Dynamic Topic Logic */
-let masterData = [];
 
-async function initHome() {
-  // Load the CSV file
-  const response = await fetch('Video_list.csv');
-  const data = await response.text();
-  
-  // Parse rows into objects
-  const rows = data.split('\n').slice(1);
-  masterData = rows.map(row => {
-    const cols = row.split(',');
-    return {
-      mood: cols[1]?.trim(),
-      category: cols[2]?.trim(),
-      url: cols[3]?.trim()
-    };
-  }).filter(r => r.mood);
-}
-
-function showTopics(intent) {
-  document.getElementById("intentScreen").classList.remove("active");
-  document.getElementById("topicScreen").classList.add("active");
-  document.getElementById("topicTitle").innerText = `What would you like to ${intent.toLowerCase()}?`;
-
-  const grid = document.getElementById("topicGrid");
-  grid.innerHTML = "";
-
-  // Find unique categories for the selected Mood
-  const uniqueCategories = [...new Set(
-    masterData.filter(v => v.mood === intent).map(v => v.category)
-  )];
-
-  uniqueCategories.forEach(cat => {
-    const div = document.createElement("div");
-    div.className = `card blue`; // Default color
-    div.innerHTML = `<div class="emoji">⭐</div><div class="label">${cat}</div>`;
-    div.onclick = () => {
-      // Directs to category page (e.g., learn/animal.html)
-      window.location.href = `learn/${cat.toLowerCase()}.html`;
-    };
-    grid.appendChild(div);
-  });
-}
-
+// Start the app
 initHome();
+</script>
+
 </body>
 </html>
